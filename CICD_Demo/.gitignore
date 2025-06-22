@@ -1,0 +1,37 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Docker artifacts
+**/*.db
+docker-compose.override.yml
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+.vscode/settings.json
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env
+
+# Publish output
+/app/publish/
