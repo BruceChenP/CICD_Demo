@@ -1,0 +1,1 @@
+Demonstration of a full CI/CD pipeline for a .NET 9 Web API, with Jenkins build, Docker image deployment to AWS ECR, and automated updates to EKS via Terraform.git 
