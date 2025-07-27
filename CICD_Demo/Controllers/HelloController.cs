@@ -8,10 +8,11 @@ public class HelloController : ControllerBase
 {
     [HttpGet]
 
-    // 20205/07/27 Bruce 修改參數
-    // 20205/07/27-2 Bruce 修改參數名稱
+    // 2025/07/27 Bruce 修改參數
+    // 2025/07/27-2 Bruce 修改參數名稱
+    // 2025/07/27-3 Bruce 修改回傳字串
     public IActionResult Get([FromQuery] string content)
     {
-        return Ok(new { message = $"Hey Bruce, {content}!" });
+        return Ok(new { message = $"Hello World, {content}" });
     }
 }
