@@ -13,6 +13,6 @@ public class HelloController : ControllerBase
     // 2025/07/27-3 Bruce 修改回傳字串
     public IActionResult Get([FromQuery] string content)
     {
-        return Ok(new { message = $"Hello World-v3, {content}" });
+        return Ok(new { message = $"Hello World-v4, {content}" });
     }
 }

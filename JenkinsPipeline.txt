@@ -1,0 +1,69 @@
+pipeline {
+    agent { label 'ubuntu-agent' }
+
+    environment {
+        AWS_REGION = '**********'
+        ECR_ACCOUNT_ID = '**********'
+        ECR_REPO_NAME = '**********'
+        DATETIME = "${new Date().format('yyyyMMdd-HHmmss', TimeZone.getTimeZone('Asia/Taipei'))}"
+        IMAGE_TAG = "${DATETIME}"
+        FULL_IMAGE_NAME = "${ECR_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:${IMAGE_TAG}"
+        CLUSTER_NAME = '**********'
+        KUBE_DEPLOYMENT_NAME = '**********'
+        KUBE_NAMESPACE = 'default'
+    }
+    
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                checkout([$class: 'GitSCM',
+                            branches: **********,
+                            userRemoteConfigs: **********
+                        ])
+                sh 'docker build -t $FULL_IMAGE_NAME .'
+            }
+        }
+
+        stage('Login to ECR') {
+            steps {
+                sh """
+                    aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${ECR_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                """
+            }
+        }
+        
+        stage('Push to ECR') {
+            steps {
+                sh "docker push $FULL_IMAGE_NAME"
+            }
+        }
+        
+        stage('Deploy to EKS') {
+            steps {
+                script {
+                    sh """
+                        aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
+                    """
+
+                    sh """
+                        kubectl set image deployment/$KUBE_DEPLOYMENT_NAME my-app=$FULL_IMAGE_NAME -n $KUBE_NAMESPACE --record
+                    """
+
+                    sh """
+                        kubectl rollout status deployment/$KUBE_DEPLOYMENT_NAME -n $KUBE_NAMESPACE
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Cleaning up workspace"
+            cleanWs()
+            sh 'docker image prune -a -f'
+        }
+        success { echo "Deployment completed successfully!" }
+        failure { echo "Build or deploy failed." }
+    }
+}
