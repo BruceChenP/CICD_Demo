@@ -7,8 +7,10 @@ namespace hello_devops_api.Controllers;
 public class HelloController : ControllerBase
 {
     [HttpGet]
-    public IActionResult Get([FromQuery] string name = "World")
+
+    // 20205/07/27 Bruce 修改參數
+    public IActionResult Get([FromQuery] string context)
     {
-        return Ok(new { message = $"Hello, {name}!" });
+        return Ok(new { message = $"Hey Bruce, {context}!" });
     }
 }
