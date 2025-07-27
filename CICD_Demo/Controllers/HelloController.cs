@@ -9,8 +9,9 @@ public class HelloController : ControllerBase
     [HttpGet]
 
     // 20205/07/27 Bruce 修改參數
-    public IActionResult Get([FromQuery] string context)
+    // 20205/07/27-2 Bruce 修改參數名稱
+    public IActionResult Get([FromQuery] string content)
     {
-        return Ok(new { message = $"Hey Bruce, {context}!" });
+        return Ok(new { message = $"Hey Bruce, {content}!" });
     }
 }
